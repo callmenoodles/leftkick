@@ -9,7 +9,6 @@ storage.local.get("direction").then((res) => {
 
 document.querySelectorAll('input[name="direction"]').forEach((radio) => {
   radio.addEventListener("change", function () {
-    console.log("CHANGE")
     if (radio.checked) {
       const value = radio.value;
 
