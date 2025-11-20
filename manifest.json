@@ -1,42 +1,41 @@
 {
-  "manifest_version": 3,
-  "name": "Move The Chat",
-  "version": "0.2.2",
-  "description": "Move livestream chats to the other side. [Currently supports Kick Chat only]",
-  "homepage_url": "https://github.com/callmenoodles/movethechat",
-  "developer": {
-    "name": "callmenoodles",
-    "url": "https://noodles.services"
-  },
-  "icons": {
-    "64": "icons/icon-color-64.png"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{b7ec307f-b892-4508-85a0-5e504e51bd73}"
-    }
-  },
-  "action": {
-    "default_icon": {
-      "64": "icons/icon-color-64.png"
-    },
-    "default_title": "Move The Chat",
-    "default_popup": "popup/index.html",
-    "default_area": "navbar",
-    "theme_icons": [
-      {
-        "light": "icons/icon-color-64.png",
-        "dark": "icons/icon-color-64.png",
-        "size": 64
-      }
-    ]
-  },
-  "host_permissions": ["*://kick.com/*"],
-  "permissions": ["storage"],
-  "content_scripts": [
-    {
-      "matches": ["*://kick.com/*"],
-      "js": ["scripts/kick.js"]
-    }
-  ]
+	"manifest_version": 3,
+	"name": "Move The Chat",
+	"version": "0.3.0",
+	"description": "Move livestream chats to the other side. [Currently supports Kick Chat only]",
+	"homepage_url": "https://github.com/callmenoodles/movethechat",
+	"developer": {
+		"name": "callmenoodles",
+		"url": "https://noodles.services"
+	},
+	"icons": {
+		"64": "icons/icon-color-64.png"
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{b7ec307f-b892-4508-85a0-5e504e51bd73}"
+		}
+	},
+	"web_accessible_resources": [
+		{
+			"resources": ["icons/swap.svg"],
+			"matches": ["*://kick.com/*"]
+		}
+	],
+	"action": {
+		"default_icon": {
+			"64": "icons/icon-color-64.png"
+		},
+		"default_title": "Move The Chat",
+		"default_popup": "popup/index.html",
+		"default_area": "navbar"
+	},
+	"host_permissions": ["*://kick.com/*"],
+	"permissions": ["storage"],
+	"content_scripts": [
+		{
+			"matches": ["*://kick.com/*"],
+			"js": ["scripts/kick.js"]
+		}
+	]
 }

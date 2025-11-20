@@ -1,16 +1,16 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: ""
 labels: bug
 assignees: callmenoodles
-
 ---
 
 **Description**
 A clear and concise description of what the bug is.
 
 **Steps to Reproduce**
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -20,14 +20,16 @@ A clear and concise description of what the bug is.
 A clear and concise description of what you expected to happen.
 
 **Browser Engine:**
+
 - [ ] Gecko (Firefox, Librewolf, Floorp, ...)
 - [ ] Chromium (Chrome, Edge, Brave, Opera, ...)
 
 **Streaming Platform:**
+
 - [ ] Kick
 
 **Version:**
-0.2.2
+0.3.0
 
 **Additional Context**
 Add any other context and about the problem and screenshots here.
