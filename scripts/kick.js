@@ -1,8 +1,13 @@
-function moveChat() {
+const storage =
+	typeof browser === "undefined" ? chrome.storage : browser.storage;
+const runtime =
+	typeof browser === "undefined" ? chrome.runtime : browser.runtime;
+
+var hasMovedLeft;
+
+function moveChat(toLeft) {
 	const chatroom = document.getElementById("channel-chatroom");
-	const main = document.querySelector("main");
-	const messages = document.getElementById("chatroom-messages");
-	const scrollPosition = messages.scrollTop;
+	const main = document.getElementsByTagName("main")[0];
 
 	// Chat is inside main on mobile layouts
 	if (chatroom && main && !main.contains(chatroom)) {
@@ -11,57 +16,201 @@ function moveChat() {
 		const btnExpandIcon = btnExpand.querySelector("svg");
 		const btnCollapse = chatroom.firstChild.querySelector("div");
 
-		const storage =
-			typeof browser === "undefined" ? chrome.storage : browser.storage;
+		if (!toLeft) {
+			main.before(chatroom);
 
-		storage.local.get("hasMoved").then((res) => {
-			if (res.hasMoved) {
-				main.before(chatroom);
-
-				if (btnExpand) {
-					btnExpandIcon.style.transform = "scale(-1,1)";
-					btnExpand.parentElement.classList.replace("right-7", "ml-7");
-					btnExpandText.after(btnExpandIcon);
-				}
-
-				if (btnCollapse) {
-					btnCollapse.classList.add("absolute", "right-0");
-					btnCollapse.querySelector("svg").style.transform = "scale(-1, 1)";
-				}
-
-				storage.local.set({
-					hasMoved: false,
-				});
-			} else {
-				main.after(chatroom);
-
-				if (btnExpand) {
-					btnExpandIcon.style.transform = "scale(1, 1)";
-					btnExpand.parentElement.classList.replace("ml-7", "right-7");
-					btnExpandText.before(btnExpandIcon);
-				}
-
-				if (btnCollapse) {
-					btnCollapse.classList.remove("absolute", "right-0");
-					btnCollapse.querySelector("svg").style.transform = "scale(1,1)";
-				}
-
-				storage.local.set({
-					hasMoved: true,
-				});
+			if (btnExpand && btnExpandIcon && btnExpandText) {
+				btnExpandIcon.style.transform = "scale(-1,1)";
+				btnExpand.parentElement.classList.replace("right-7", "ml-7");
+				btnExpandText.after(btnExpandIcon);
 			}
-		});
 
-		messages.scrollTop = scrollPosition;
+			if (btnCollapse) {
+				btnCollapse.classList.add("absolute", "right-0");
+				btnCollapse.querySelector("svg").style.transform = "scale(-1, 1)";
+			}
+
+			hasMovedLeft = false;
+
+			moveVideoPlayer();
+			moveIdentity();
+
+			storage.local.set({
+				hasMovedLeft: false,
+			});
+		} else {
+			main.after(chatroom);
+
+			if (btnExpand && btnExpandIcon && btnExpandText) {
+				btnExpandIcon.style.transform = "scale(1, 1)";
+				btnExpand.parentElement.classList.replace("ml-7", "right-7");
+				btnExpandText.before(btnExpandIcon);
+			}
+
+			if (btnCollapse) {
+				btnCollapse.classList.remove("absolute", "right-0");
+				btnCollapse.querySelector("svg").style.transform = "scale(1,1)";
+			}
+
+			hasMovedLeft = true;
+
+			moveVideoPlayer();
+			moveIdentity();
+
+			storage.local.set({
+				hasMovedLeft: true,
+			});
+		}
+
+		const messages = document.getElementById("chatroom-messages");
+		messages.scrollTop = messages.scrollHeight;
 	}
 }
 
-function moveUserCard() {
-	const userCard = document.getElementById("user-identity");
+function injectSettingsButton() {
+	const chatSettingsPanel = document.getElementById("chat-settings-panel");
+	const chatSettingsList = chatSettingsPanel.querySelector("ul");
+	let chatSettingsListItem;
 
-	if (userCard) {
+	if (chatSettingsList) {
+		if (chatSettingsList) {
+			chatSettingsListItem = chatSettingsList.firstChild.cloneNode(true);
+			chatSettingsListItem.setAttribute("id", "mtc-btn-settings");
+			chatSettingsList
+				.appendChild(chatSettingsListItem)
+				.querySelector("span").innerText = "Move The Chat";
+
+			let itemIcon = chatSettingsList.lastChild.querySelector("svg");
+			let itemSVG = document.createElement("img");
+
+			itemSVG.src = runtime.getURL("../icons/swap.svg");
+			itemSVG.width = 16;
+			itemSVG.height = 16;
+
+			chatSettingsListItem.firstChild.replaceChild(itemSVG, itemIcon);
+		}
+
+		chatSettingsListItem.addEventListener("click", () => {
+			moveChat(!hasMovedLeft);
+		});
+	}
+}
+
+// #chat-settings-panel doesn't seem to load at init
+function initSettingsButtonObserver() {
+	const chatroomFooter = document.getElementById("chatroom-footer");
+
+	const settingsObserver = new MutationObserver(() => {
+		const chatSettingsPanel = document.getElementById("chat-settings-panel");
+		const mtcSettingsButton = document.getElementById("mtc-btn-settings");
+
+		if (chatSettingsPanel && !mtcSettingsButton) {
+			injectSettingsButton();
+		}
+	});
+
+	if (chatroomFooter) {
+		settingsObserver.observe(chatroomFooter, {
+			subtree: true,
+			childList: true,
+		});
+	}
+}
+
+function injectTopBarButton() {
+	const chatroom = document.getElementById("channel-chatroom");
+	const mtcTopBarButton = document.getElementById("mtc-btn-topbar");
+
+	if (!mtcTopBarButton) {
+		let topBar = chatroom.firstChild;
+		let btnMove = topBar.firstChild.cloneNode(true);
+		btnMove.setAttribute("id", "mtc-btn-topbar");
+		btnMove.firstChild.firstChild.remove();
+
+		let btnSVG = document.createElement("img");
+		btnSVG.src = runtime.getURL("../icons/swap.svg");
+		btnSVG.width = 20;
+		btnSVG.height = 20;
+
+		btnMove.firstChild.appendChild(btnSVG);
+		btnMove.addEventListener("click", () => {
+			moveChat(!hasMovedLeft);
+		});
+		topBar.appendChild(btnMove);
+	}
+}
+
+function initTopBarObserver() {
+	const chatroom = document.getElementById("channel-chatroom");
+	const chatroomTopBar = chatroom.firstChild;
+	injectTopBarButton();
+
+	const topBarObserver = new MutationObserver((entries) => {
+		const mtcTopBarButton = document.getElementById("mtc-btn-topbar");
+
+		if (!mtcTopBarButton) {
+			injectTopBarButton();
+		}
+	});
+
+	topBarObserver.observe(chatroomTopBar, {
+		subtree: true,
+		childList: true,
+	});
+
+	const groupMain = document.getElementsByClassName("group/main")[0].firstChild;
+
+	const responsiveObserver = new MutationObserver(() => {
+		injectTopBarButton();
+	});
+
+	responsiveObserver.observe(groupMain, {
+		attributes: true,
+		attributeFilter: ["data-viewport-state"],
+		subtree: false,
+	});
+}
+
+function moveVideoPlayer() {
+	const player = document.getElementById("video-player");
+
+	if (player && player.parentElement) {
+		const controls =
+			player.parentElement.getElementsByClassName("z-controls")[0];
+
+		if (controls) {
+			const hasPlayerMoved = controls.classList.contains("left-0");
+
+			if (!hasMovedLeft && hasPlayerMoved) {
+				controls.classList.replace("left-0", "right-0");
+			} else if (hasMovedLeft && !hasPlayerMoved) {
+				controls.classList.replace("right-0", "left-0");
+			}
+		}
+	}
+}
+
+function initVideoPlayerObserver() {
+	const videoPlayerContainer = document.getElementById("video-player");
+
+	const videoPlayerObserver = new MutationObserver(() => {
+		moveVideoPlayer();
+	});
+
+	if (videoPlayerContainer) {
+		videoPlayerObserver.observe(videoPlayerContainer, {
+			childList: true,
+			subtree: false,
+		});
+	}
+}
+
+function moveIdentity() {
+	const userIdentity = document.getElementById("user-identity");
+
+	if (userIdentity) {
 		const chatWidth =
-			getComputedStyle(userCard).getPropertyValue("--chat-width");
+			getComputedStyle(userIdentity).getPropertyValue("--chat-width");
 		const sidebar = document.getElementById("sidebar-wrapper");
 		let sidebarWidth = 0;
 
@@ -69,139 +218,61 @@ function moveUserCard() {
 			sidebarWidth = sidebar.offsetWidth;
 		}
 
-		const storage =
-			typeof browser === "undefined" ? chrome.storage : browser.storage;
+		const hasIdentityMoved = userIdentity.style.left;
 
-		storage.local.get("hasMoved").then((res) => {
-			if (!res.hasMoved) {
-				userCard.style.left = parseInt(chatWidth) + sidebarWidth + "px";
-			} else {
-				userCard.style.removeProperty("left");
-			}
+		if (hasMovedLeft) {
+			userIdentity.style.removeProperty("left");
+		} else {
+			userIdentity.style.left = parseInt(chatWidth) + sidebarWidth + "px";
+		}
+	}
+}
+
+function initIdentityObserver() {
+	const streamContainer =
+		document.getElementsByTagName("main")[0].parentElement;
+
+	const userIdentityObserver = new MutationObserver(moveIdentity);
+
+	if (streamContainer) {
+		userIdentityObserver.observe(streamContainer, {
+			childList: true,
+			subtree: false,
 		});
 	}
 }
 
-let currentUsername;
-
-function moveOnStreamChange() {
-	const usernameElement = document.getElementById("channel-username");
-
-	if (usernameElement) {
-		const username = usernameElement.innerText.trim();
-
-		if (username !== currentUsername) {
-			currentUsername = username;
-			moveChat();
-		}
-	}
-}
-
-let currentPlayerChildren;
-
-// HOTFIX: More than 2 elements?
-// Theater mode
-function moveVideoPlayer() {
-	const video = document.getElementById("video-player");
-	const player = video.parentElement;
-	if (player) {
-		if (player.childElementCount !== currentPlayerChildren) {
-			currentPlayerChildren = player.childElementCount;
-			const storage =
-				typeof browser === "undefined" ? chrome.storage : browser.storage;
-
-			if (currentPlayerChildren > 1) {
-				storage.local.get("hasMoved").then((result) => {
-					const hasMoved = result.hasMoved ?? false;
-					const controls = player.lastChild;
-
-					if (!hasMoved) {
-						controls.classList.replace("left-0", "right-0");
-					} else {
-						controls.classList.replace("right-0", "left-0");
-					}
-				});
-			}
-		}
-	}
-}
-
-let currentChatroomParent;
-
-// FIXME: Button disappears when going into a submenu
-// FIXME: Logout removes it
-// FIXME: Zooming removes buttons
-// FIXME: Multiple buttons rendering
-// FIXME: Chat replay
-// FIXME: Multiple tabs breaks sometimes (check )
-// FIXME: Settings not vailable error in console
-// FIXME: Chat moves every refresh but should stay oin one side
-function injectButton() {
-	const chat = document.getElementById("channel-chatroom");
-
-	if (chat) {
-		if (chat.parentElement !== currentChatroomParent) {
-			const chatSettingsList = document
-				.getElementById("chat-settings-panel")
-				.querySelector("ul");
-			let chatSettingsListItem;
-
-			const runtime =
-				typeof browser === "undefined" ? chrome.runtime : browser.runtime;
-
-			if (chatSettingsList) {
-				chatSettingsListItem = chatSettingsList.firstChild.cloneNode(true);
-
-				chatSettingsList
-					.appendChild(chatSettingsListItem)
-					.querySelector("span").innerText = "Move The Chat";
-
-				let itemIcon = chatSettingsList.lastChild.querySelector("svg");
-				let itemSVG = document.createElement("img");
-				itemSVG.src = runtime.getURL("../icons/swap.svg");
-				itemSVG.width = 16;
-				itemSVG.height = 16;
-
-				chatSettingsListItem.firstChild.replaceChild(itemSVG, itemIcon);
-			}
-
-			let topBar = chat.firstChild;
-			let mtc = topBar.firstChild.cloneNode(true);
-			mtc.firstChild.firstChild.remove();
-
-			let svg = document.createElement("img");
-			svg.src = runtime.getURL("../icons/swap.svg");
-			svg.width = 20;
-			svg.height = 20;
-
-			mtc.firstChild.appendChild(svg);
-			topBar.appendChild(mtc);
-
-			currentChatroomParent = chat.parentElement;
-
-			if (chatSettingsList) {
-				chatSettingsListItem.addEventListener("click", moveChat);
-			}
-			mtc.addEventListener("click", moveChat);
-			moveChat();
-		}
-	}
-}
-
 function init() {
-	const observer = new MutationObserver(() => {
-		injectButton();
-		moveOnStreamChange(); // useless?
-		moveUserCard();
-		moveVideoPlayer();
+	var channelName;
+
+	const streamObserver = new MutationObserver(() => {
+		const channelElement = document.getElementById("channel-username");
+
+		if (channelElement) {
+			const newChannelName = channelElement.innerText;
+
+			if (newChannelName !== channelName) {
+				channelName = newChannelName;
+
+				storage.local.get("hasMovedLeft").then((res) => {
+					hasMovedLeft = res.hasMovedLeft ?? true;
+					moveChat(res.hasMovedLeft);
+				});
+
+				initTopBarObserver();
+				initSettingsButtonObserver();
+				initVideoPlayerObserver();
+				initIdentityObserver();
+
+				console.info("[Move The Chat]: Initialized");
+			}
+		}
 	});
 
-	observer.observe(document.body, {
-		childList: true,
+	streamObserver.observe(document.body, {
 		subtree: true,
+		characterData: true,
 	});
-
-	console.info("[Move The Chat]: Initialized");
 }
 
 init();
