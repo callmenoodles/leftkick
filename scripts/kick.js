@@ -218,8 +218,6 @@ function moveIdentity() {
 			sidebarWidth = sidebar.offsetWidth;
 		}
 
-		const hasIdentityMoved = userIdentity.style.left;
-
 		if (hasMovedLeft) {
 			userIdentity.style.removeProperty("left");
 		} else {
