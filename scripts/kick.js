@@ -179,11 +179,9 @@ function moveVideoPlayer() {
 			player.parentElement.getElementsByClassName("z-controls")[0];
 
 		if (controls) {
-			const hasPlayerMoved = controls.classList.contains("left-0");
-
-			if (!hasMovedLeft && hasPlayerMoved) {
+			if (!hasMovedLeft) {
 				controls.classList.replace("left-0", "right-0");
-			} else if (hasMovedLeft && !hasPlayerMoved) {
+			} else {
 				controls.classList.replace("right-0", "left-0");
 			}
 		}
@@ -191,14 +189,11 @@ function moveVideoPlayer() {
 }
 
 function initVideoPlayerObserver() {
+	const videoPlayerObserver = new MutationObserver(moveVideoPlayer);
 	const videoPlayerContainer = document.getElementById("video-player");
 
-	const videoPlayerObserver = new MutationObserver(() => {
-		moveVideoPlayer();
-	});
-
-	if (videoPlayerContainer) {
-		videoPlayerObserver.observe(videoPlayerContainer, {
+	if (videoPlayerContainer && videoPlayerContainer.parentElement) {
+		videoPlayerObserver.observe(videoPlayerContainer.parentElement, {
 			childList: true,
 			subtree: false,
 		});
