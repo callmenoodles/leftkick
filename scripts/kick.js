@@ -64,7 +64,10 @@
 			}
 
 			const messages = document.getElementById("chatroom-messages");
-			messages.scrollTop = messages.scrollHeight;
+
+			if (messages) {
+				messages.scrollTop = messages.scrollHeight;
+			}
 		}
 	}
 

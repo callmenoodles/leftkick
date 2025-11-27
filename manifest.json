@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "Left Kick",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"description": "Move the chat on Kick to the left or right side.",
 	"homepage_url": "https://github.com/callmenoodles/leftkick",
 	"developer": {
