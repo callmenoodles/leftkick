@@ -79,7 +79,7 @@
 				chatSettingsListItem.setAttribute("id", "mtc-btn-settings");
 				chatSettingsList
 					.appendChild(chatSettingsListItem)
-					.querySelector("span").innerText = "Move The Chat";
+					.querySelector("span").innerText = "Left Kick";
 
 				let itemIcon = chatSettingsList.lastChild.querySelector("svg");
 				let itemSVG = document.createElement("img");
@@ -258,7 +258,7 @@
 				initVideoPlayerObserver();
 				initIdentityObserver();
 
-				console.info("[Move The Chat]: Initialized");
+				console.info("[Left Kick]: Initialized");
 			}
 		}
 	});

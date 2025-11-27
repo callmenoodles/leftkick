@@ -3,7 +3,7 @@
 	"name": "Left Kick",
 	"version": "0.4.0",
 	"description": "Move the chat on Kick to the left or right side.",
-	"homepage_url": "https://github.com/callmenoodles/movethechat",
+	"homepage_url": "https://github.com/callmenoodles/leftkick",
 	"developer": {
 		"name": "callmenoodles",
 		"url": "https://noodles.services"
