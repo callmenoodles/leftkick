@@ -1,15 +1,16 @@
 {
 	"manifest_version": 3,
-	"name": "Move The Chat",
-	"version": "0.3.0",
-	"description": "Move livestream chats to the other side. [Currently supports Kick Chat only]",
+	"name": "Left Kick",
+	"version": "0.3.2",
+	"description": "Move the chat on Kick to the left or right side.",
 	"homepage_url": "https://github.com/callmenoodles/movethechat",
 	"developer": {
 		"name": "callmenoodles",
 		"url": "https://noodles.services"
 	},
 	"icons": {
-		"64": "icons/icon-color-64.png"
+		"48": "icons/new/leftkick-64.png",
+		"128": "icons/new/leftkick-128.png"
 	},
 	"browser_specific_settings": {
 		"gecko": {
@@ -24,7 +25,7 @@
 	],
 	"action": {
 		"default_icon": {
-			"64": "icons/icon-color-64.png"
+			"64": "icons/new/leftkick-64.png"
 		},
 		"default_title": "Move The Chat",
 		"default_popup": "popup/index.html",
