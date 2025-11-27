@@ -29,7 +29,7 @@ A clear and concise description of what you expected to happen.
 - [ ] Kick
 
 **Version:**
-0.3.2
+0.4.0
 
 **Additional Context**
 Add any other context and about the problem and screenshots here.

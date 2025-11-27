@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "Left Kick",
-	"version": "0.3.2",
+	"version": "0.4.0",
 	"description": "Move the chat on Kick to the left or right side.",
 	"homepage_url": "https://github.com/callmenoodles/movethechat",
 	"developer": {
@@ -9,8 +9,8 @@
 		"url": "https://noodles.services"
 	},
 	"icons": {
-		"48": "icons/new/leftkick-64.png",
-		"128": "icons/new/leftkick-128.png"
+		"48": "icons/leftkick-64.png",
+		"128": "icons/leftkick-128.png"
 	},
 	"browser_specific_settings": {
 		"gecko": {
@@ -25,9 +25,9 @@
 	],
 	"action": {
 		"default_icon": {
-			"64": "icons/new/leftkick-64.png"
+			"64": "icons/leftkick-64.png"
 		},
-		"default_title": "Move The Chat",
+		"default_title": "Left Kick",
 		"default_popup": "popup/index.html",
 		"default_area": "navbar"
 	},
