@@ -2,5 +2,5 @@
 
 Left Kick allows you to move Kick livestream chats to the left or right side.
 
-[![Firefox Add-Ons](https://img.shields.io/badge/Firefox_Add_Ons-20123A?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/left-kick/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search)
-[![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-4285F4?logo=chromewebstore&logoColor=white)](https://chromewebstore.google.com/detail/move-the-chat/obmebfcbgpmpnjfildfgjjpgpgmiifgp?authuser=1&hl=en)
+[![Get Firefox Add-on](https://img.shields.io/amo/v/left-kick?label=Get%20Firefox%20Add-on&color=FF7139&logo=firefoxbrowser&style=flat)](https://addons.mozilla.org/firefox/addon/left-kick/)
+[![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/obmebfcbgpmpnjfildfgjjpgpgmiifgp?label=Get%20Chrome%20Extension&color=4285F4&logo=googlechrome&style=flat)](https://chromewebstore.google.com/detail/move-the-chat/obmebfcbgpmpnjfildfgjjpgpgmiifgp?authuser=1&hl=en)
